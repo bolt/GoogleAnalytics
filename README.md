@@ -1,4 +1,5 @@
-GoogleAnalytics
-===============
+Google Analytics
+================
 
-[Bolt Extension] A small extension to add the scripting for a Google Analytics tracker to your site.
+This extension inserts the Google Analitics tracker code in your pages. Edit the `config.yml` file so
+it contains the correct 'webproperty-id'.
