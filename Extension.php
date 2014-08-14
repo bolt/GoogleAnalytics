@@ -27,6 +27,11 @@ class Extension extends \Bolt\BaseExtension
 
     }
 
+    public function getName()
+    {
+        return "Google Analytics";
+    }
+
     function initialize() {
 
         $this->addSnippet(SnippetLocation::END_OF_HEAD, 'insertAnalytics');
