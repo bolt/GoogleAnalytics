@@ -20,10 +20,5 @@
         "psr-4": {
             "Bolt\\Extension\\Bolt\\GoogleAnalytics\\": ""
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.7.*"
-        }
     }
 }
