@@ -1,7 +1,7 @@
 <?php
 // Google Analytics extension for Bolt
 
-namespace GoogleAnalytics;
+namespace Bolt\Extension\Bolt\GoogleAnalytics;
 
 use Bolt\Extensions\Snippets\Location as SnippetLocation;
 
