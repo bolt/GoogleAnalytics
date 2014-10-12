@@ -25,7 +25,7 @@ class Extension extends \Bolt\BaseExtension
     }
 
 
-    function insertAnalytics()
+    public function insertAnalytics()
     {
 
         if (empty($this->config['webproperty'])) {
@@ -78,7 +78,7 @@ EOM;
 
 
 
-    function analyticsWidget()
+    public function analyticsWidget()
     {
         // http://ga-dev-tools.appspot.com/explorer/
         // http://code.google.com/p/gapi-google-analytics-php-interface/
@@ -225,7 +225,7 @@ EOM;
     }
 
 
-    function secondMinute($seconds) {
+    private function secondMinute($seconds) {
         return sprintf('%d:%02d', floor($seconds/60), $seconds % 60);
     }
 
