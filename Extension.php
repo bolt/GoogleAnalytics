@@ -8,25 +8,6 @@ use Bolt\Extensions\Snippets\Location as SnippetLocation;
 class Extension extends \Bolt\BaseExtension
 {
 
-    function info() {
-
-        $data = array(
-            'name' =>"Google Analytics",
-            'description' => "A small extension to add the scripting for a Google Analytics tracker to your site.",
-            'author' => "Bob den Otter",
-            'link' => "http://bolt.cm",
-            'version' => "0.1",
-            'required_bolt_version' => "1.0",
-            'highest_bolt_version' => "1.0",
-            'type' => "Snippet, Widget",
-            'first_releasedate' => "2012-10-10",
-            'latest_releasedate' => "2013-01-27",
-        );
-
-        return $data;
-
-    }
-
     public function getName()
     {
         return "Google Analytics";
