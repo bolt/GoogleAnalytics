@@ -1,5 +1,5 @@
 {
-    "name": "bolt/GoogleAnalytics",
+    "name": "bolt/googleanalytics",
     "description": "",
     "type": "bolt-extension",
     "keywords": [],
@@ -18,12 +18,7 @@
             "init.php"
         ],
         "psr-4": {
-            "GoogleAnalytics\\": ""
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.7.*"
+            "Bolt\\Extension\\Bolt\\GoogleAnalytics\\": ""
         }
     }
 }
