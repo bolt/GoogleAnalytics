@@ -85,9 +85,6 @@ EOM;
         // http://www.codediesel.com/php/reading-google-analytics-data-from-php/
         // http://code.google.com/p/gapi-google-analytics-php-interface/wiki/UsingFilterControl
 
-        $yamlparser = new \Symfony\Component\Yaml\Parser();
-        $this->config = $yamlparser->parse(file_get_contents(__DIR__.'/config.yml'));
-
         if (empty($this->config['ga_email'])) { return "ga_email not set in config.yml."; }
         if (empty($this->config['ga_password'])) { return "ga_password not set in config.yml."; }
         if (empty($this->config['ga_profile_id'])) { return "ga_profile_id not set in config.yml."; }
