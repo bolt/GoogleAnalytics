@@ -13,15 +13,14 @@ class Extension extends \Bolt\BaseExtension
         return "Google Analytics";
     }
 
-    function initialize() {
-
+    function initialize()
+    {
         $this->addSnippet(SnippetLocation::END_OF_HEAD, 'insertAnalytics');
 
         $additionalhtml = '<script type="text/javascript" src="https://www.google.com/jsapi"></script>';
         $additionalhtml .= '<script>google.load("visualization", "1", {packages:["corechart"]}); </script>';
 
         if($this->config['widget']) $this->addWidget('dashboard', 'right_first', 'analyticsWidget', $additionalhtml, 3600);
-
     }
 
 
@@ -42,7 +41,7 @@ class Extension extends \Bolt\BaseExtension
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', '%webproperty%', '%domainname%');
+        ga('create', '%webproperty%', '%domainname%');%displayfeatures%
         ga('send', 'pageview');
     </script>
 EOM;
@@ -69,6 +68,7 @@ EOM;
     }
 
         $html = str_replace("%webproperty%", $this->config['webproperty'], $html);
+        $html = str_replace("%displayfeatures%", $this->config['universal_displayfeatures'] ? " ga('require', 'displayfeatures');" : "" ), $html);
         $html = str_replace("%domainname%", ( $this->config['universal'] ? $this->config['universal_domainname'] : $_SERVER['HTTP_HOST'] ), $html);
 
         return new \Twig_Markup($html, 'UTF-8');
