@@ -68,7 +68,7 @@ EOM;
     }
 
         $html = str_replace("%webproperty%", $this->config['webproperty'], $html);
-        $html = str_replace("%displayfeatures%", $this->config['universal_displayfeatures'] ? " ga('require', 'displayfeatures');" : "" ), $html);
+        $html = str_replace("%displayfeatures%", ( $this->config['universal_displayfeatures'] ? " ga('require','displayfeatures');" : '' ), $html);
         $html = str_replace("%domainname%", ( $this->config['universal'] ? $this->config['universal_domainname'] : $_SERVER['HTTP_HOST'] ), $html);
 
         return new \Twig_Markup($html, 'UTF-8');
