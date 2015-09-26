@@ -6,7 +6,6 @@
 
 {% block page_main %}
 <div class="stats">
-    {{ dump(app.extensions.assets) }}
     {% if token is json %}
         <div id="active-users-container"></div>
         <div class="wrapper monthbymonth">
