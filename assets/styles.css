@@ -1,0 +1,116 @@
+.wrapper {
+    width: 45%;
+    float: left;
+    border-bottom: 1px solid #eee;
+    padding: 5px;
+    margin: 5px;
+}
+
+@media (max-width: 1200px) {
+.wrapper {
+    width: 90%;
+}
+}
+
+.monthbymonth {
+    width: 90%;
+}
+
+.chart {
+    height: 400px;
+}
+
+.Chartjs {
+    font-size: .85em
+}
+
+.Chartjs-figure {
+    height: 250px
+}
+
+.Chartjs-legend {
+    list-style: none;
+    margin: 0;
+    padding: 1em 0 0;
+    text-align: center
+}
+
+.Chartjs-legend>li {
+    display: inline-block;
+    padding: .25em .5em
+}
+
+.Chartjs-legend>li>i {
+    display: inline-block;
+    height: 1em;
+    margin-right: .5em;
+    vertical-align: -.1em;
+    width: 1em
+}
+
+#active-users-container {
+    text-align: center;
+}
+
+.ActiveUsers {
+    background: #f3f2f0;
+    border: 1px solid #d4d2d0;
+    border-radius: 4px;
+    font-weight: 300;
+    padding: .5em 1.5em;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.ActiveUsers-value {
+    display: inline-block;
+    font-weight: 600;
+    margin-right: -.25em
+}
+
+.ActiveUsers.is-increasing {
+    -webkit-animation: increase 3s;
+    animation: increase 3s
+}
+
+.ActiveUsers.is-decreasing {
+    -webkit-animation: decrease 3s;
+    animation: decrease 3s
+}
+
+.stats h2 {
+    font-size: 16px;
+    line-height: 20px;
+}
+
+@-webkit-keyframes increase {
+    10% {
+        background-color: #eaffea;
+        border-color: hsla(120, 100%, 25%, .5);
+        color: hsla(120, 100%, 25%, 1)
+    }
+}
+
+@keyframes increase {
+    10% {
+        background-color: #eaffea;
+        border-color: hsla(120, 100%, 25%, .5);
+        color: hsla(120, 100%, 25%, 1)
+    }
+}
+
+@-webkit-keyframes decrease {
+    10% {
+        background-color: #ffeaea;
+        border-color: hsla(0, 100%, 50%, .5);
+        color: red
+    }
+}
+
+@keyframes decrease {
+    10% {
+        background-color: #ffeaea;
+        border-color: hsla(0, 100%, 50%, .5);
+        color: red
+    }
+}

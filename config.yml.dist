@@ -5,18 +5,19 @@ webproperty: UA-12345678-1
 universal: false
 universal_domainname: mycoolwebsite.com
 
-widget: false
-widget_position: right_first
+# Turn on or off the backend statistics view
+backend: true
 
-ga_email: xxxxx@gmail.com
-ga_password: xxxxxxxxxxx
 # NOTE: the 'ga_profile_id' is _not_ the same as the 'webproperty'.
 #
 # Visit your Google Analytics page for your site, and look the displayed URL, e.g.
-#   https://www.google.com/analytics/web/?authuser=0#dashboard/default/a00000000w11111111p22222222/
+# https://www.google.com/analytics/web/?authuser=0#dashboard/default/a00000000w11111111p22222222/
 #
 # In this case the number after the 'p' is your ga_profile_id (22222222 above, yours will be different)
-ga_profile_id: 87654321
-filter_referral: bolt.cm
+ga_profile_id: 
 
-number_of_days: 14
+# Use the developers console and replace the values with your
+# service account email, and absolute location of your key file.
+# You can generate the needed details at https://console.developers.google.com
+key_file_location: 
+service_account_email: 
