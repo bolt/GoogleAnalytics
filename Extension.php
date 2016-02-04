@@ -56,13 +56,13 @@ class Extension extends \Bolt\BaseExtension
     public function GoogleAnalytics()
     {
 
-        $this->addJavascript('assets/es6-promise.min.js', 1);
-        $this->addJavascript('assets/active-users.js', 1);
-        $this->addJavascript('assets/date-range-selector.js', 1);
-        $this->addJavascript('assets/moment-with-locales.min.js', 1);
-        $this->addJavascript('assets/Chart.min.js', 1);
-        $this->addJavascript('assets/googleanalytics.js', array('late' => true, 'priority' => 1000));
-        $this->addCss('assets/styles.css', 1);
+        $this->addJavascript('assets/es6-promise.min.js', array('late' => true));
+        $this->addJavascript('assets/active-users.js', array('late' => true));
+        $this->addJavascript('assets/date-range-selector.js', array('late' => true));
+        $this->addJavascript('assets/moment-with-locales.min.js', array('late' => true));
+        $this->addJavascript('assets/Chart.min.js', array('late' => true));
+        $this->addJavascript('assets/googleanalytics.js', array('late' => true));
+        $this->addCss('assets/styles.css');
 
         $data = [
             "locale" => substr($this->app['locale'], 0, 2),
