@@ -61,7 +61,7 @@ class Extension extends \Bolt\BaseExtension
         $this->addJavascript('assets/date-range-selector.js', array('late' => true));
         $this->addJavascript('assets/moment-with-locales.min.js', array('late' => true));
         $this->addJavascript('assets/Chart.min.js', array('late' => true));
-        $this->addJavascript('assets/googleanalytics.js', array('late' => true));
+        $this->addJavascript('assets/googleanalytics.js', array('late' => true, 'priority' => 1000));
         $this->addCss('assets/styles.css');
 
         $data = [
