@@ -8,6 +8,7 @@ it contains the correct 'webproperty-id', 'ga_profile_id', 'key_file_location', 
 Use the developers console and replace the values with your service account email, and absolute location of your key file.
 You can generate the needed details at https://console.developers.google.com.
 Here's a quick 'n' dirty step-by-step:
+
 1. Go to the Google API Console and create a new app/project
 2. In the Services tab, flip the Google Analytics switch to on
 3. Click the credentials tab
@@ -16,7 +17,7 @@ Here's a quick 'n' dirty step-by-step:
 6. Select the p12 format
 7. Download the key and then upload it to your server.
 8. Visit your google analytics admin and add the service account email under User Management with the 'read & analyze' permissions
-9. Update the google analytics config.yml with the key file location and service account email. **
+9. Update the google analytics config.yml with the key file name and put the file under app/config/extensions/ and service account email. **
 
 ** The p12 file didn't work with the version of google code in this extension you may have to convert it to a pem file with this command
 
