@@ -19,6 +19,8 @@ Here's a quick 'n' dirty step-by-step:
 8. Visit your google analytics admin and add the service account email under User Management with the 'read & analyze' permissions
 9. Update the google analytics config.yml with the key file name and put the file under app/config/extensions/ and service account email. **
 
+** Verbatim instructions can be found here: https://developers.google.com/analytics/devguides/reporting/core/v3/quickstart/service-php#enable
+
 ** The p12 file didn't work with the version of google code in this extension you may have to convert it to a pem file with this command
 
 openssl pkcs12 -in ga-key-file.p12 -out ga-key-file.pem -nodes
