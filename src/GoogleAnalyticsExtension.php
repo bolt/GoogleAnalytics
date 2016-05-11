@@ -130,8 +130,6 @@ class GoogleAnalyticsExtension extends SimpleExtension
             return "ga_profile_id not set in config.yml.";
         }
 
-        require_once(__DIR__ . '/../Google/autoload.php');
-
         $service_account_email = $config['service_account_email']; //Email Address
         $key_file_location = $config['key_file_location']; //key.p12
 
