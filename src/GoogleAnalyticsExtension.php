@@ -39,7 +39,12 @@ class GoogleAnalyticsExtension extends SimpleExtension
 
     protected function registerBackendRoutes(ControllerCollection $collection)
     {
-        $collection->match('/extensions/google-analytics', [$this, 'googleAnalytics']);
+        $app = $this->getContainer();
+
+        //Block unauthorized access...
+        if ($app['users']->isAllowed('dashboard')) {
+            $collection->match('/extensions/google-analytics', [$this, 'googleAnalytics']);
+        }
     }
 
     protected function registerTwigPaths()
