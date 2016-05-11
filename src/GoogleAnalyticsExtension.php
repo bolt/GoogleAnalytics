@@ -68,6 +68,13 @@ class GoogleAnalyticsExtension extends SimpleExtension
             ->setCallback([$this, 'insertAnalytics']);
 
         return [
+            new Stylesheet('styles.css'),
+            new JavaScript('active-users.js'),
+            new JavaScript('Chart.min.js'),
+            new JavaScript('date-range-selector.js'),
+            new JavaScript('es6-promise.min.js'),
+            new JavaScript('googleanalytics.js'),
+            new JavaScript('moment-with-locales.min.js'),
             $analyticsCode
         ];
     }
