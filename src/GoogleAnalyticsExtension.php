@@ -141,7 +141,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
             return "Key file not found in app/config/extenstions/!";
         }
 
-        require_once(__DIR__.'/Google/autoload.php');
+        require_once(__DIR__.'/../Google/autoload.php');
 
         // Create and configure a new client object.
         $client = new \Google_Client();
