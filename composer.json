@@ -26,7 +26,7 @@
         }
     },
     "extra": {
-        "bolt-assets": "assets",
+        "bolt-assets": "web",
         "bolt-class": "Bolt\\Extension\\Bolt\\GoogleAnalytics\\GoogleAnalyticsExtension"
     }
 }
