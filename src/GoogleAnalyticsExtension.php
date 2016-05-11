@@ -14,6 +14,8 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Loader as TranslationLoader;
+use Bolt\Asset\File\JavaScript;
+use Bolt\Asset\File\Stylesheet;
 
 class GoogleAnalyticsExtension extends SimpleExtension
 {
