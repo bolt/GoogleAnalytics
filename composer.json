@@ -1,10 +1,11 @@
 {
     "name": "bolt/googleanalytics",
-    "description": "",
+    "description": "A Google Analytics Extension for Bolt",
     "type": "bolt-extension",
     "keywords": [],
     "require": {
-        "bolt/bolt": ">=2.0.0,<3.0.0"
+        "bolt/bolt": "^3.0.0",
+        "google/apiclient": "^2.0.0@RC"
     },
     "license": "MIT",
     "authors": [
@@ -13,12 +14,20 @@
             "email": "bob@twokings.nl"
         }
     ],
+    "keywords": [
+        "statistics",
+        "analytics",
+        "google"
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
-        "files": [
-            "init.php"
-        ],
         "psr-4": {
-            "Bolt\\Extension\\Bolt\\GoogleAnalytics\\": ""
+            "Bolt\\Extension\\Bolt\\GoogleAnalytics\\": "src"
         }
+    },
+    "extra": {
+        "bolt-assets": "assets",
+        "bolt-class": "Bolt\\Extension\\Bolt\\GoogleAnalytics\\GoogleAnalyticsExtension"
     }
 }
