@@ -4,8 +4,7 @@
     "type": "bolt-extension",
     "keywords": [],
     "require": {
-        "bolt/bolt": "^3.0.0",
-        "google/apiclient": "^2.0.0@RC"
+        "bolt/bolt": "^3.0.0"
     },
     "license": "MIT",
     "authors": [
