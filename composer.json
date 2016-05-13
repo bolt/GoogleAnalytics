@@ -11,6 +11,10 @@
         {
             "name": "Bob den Otter",
             "email": "bob@twokings.nl"
+        },
+        {
+            "name": "Aaron Valandra",
+            "email": "avaland@woopta.com"
         }
     ],
     "keywords": [
