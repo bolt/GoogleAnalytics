@@ -131,7 +131,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
         $service_account_email = $config['service_account_email']; //Email Address
         $key_file_location = $config['key_file_location']; //key.p12
 
-        $path = $app['resources']->getPath('extensions/config/' . $key_file_location);
+        $path = $app['resources']->getPath('extensionsconfig/' . $key_file_location);
 
         if (!file_exists($path)) {
             return "Key file not found in app/config/extenstions/!";
