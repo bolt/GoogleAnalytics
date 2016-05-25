@@ -14,6 +14,7 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Loader as TranslationLoader;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class GoogleAnalyticsExtension extends SimpleExtension
 {
@@ -27,7 +28,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
                 if ($fileInfo->isFile()) {
                     list($domain, $extension) = explode('.', $fileInfo->getFilename());
 
-                    $path = $app['resources']->getPath('extensions' . DIRECTORY_SEPARATOR . $fileInfo->getPath());
+                    $path = $app['resources']->getPath('extensions/' . $fileInfo->getPath());
 
                     $app['translator']->addResource($extension, $path, $domain);
                 }
@@ -39,19 +40,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
 
     protected function registerBackendRoutes(ControllerCollection $collection)
     {
-        $app = $this->getContainer();
-
-        //Block unauthorized access...
-        if ($app['users']->isAllowed('dashboard')) {
-            $collection->match('/extensions/google-analytics', [$this, 'googleAnalytics']);
-        }
-    }
-
-    protected function registerTwigPaths()
-    {
-        return [
-            'templates'
-        ];
+        $collection->match('/extensions/google-analytics', [$this, 'googleAnalytics']);
     }
 
     protected function registerMenuEntries()
@@ -79,19 +68,23 @@ class GoogleAnalyticsExtension extends SimpleExtension
 
     public function googleAnalytics(Application $app, Request $request)
     {
+        //Block unauthorized access...
+        if (!$app['users']->isAllowed('dashboard')) {
+            throw new AccessDeniedException('Logged in user does not have the correct rights to use this class.');
+        }
+
         $config = $this->getConfig();
 
         $data = [
-            "locale" => substr($this->app['locale'], 0, 2),
+            "locale" => substr($app['locale'], 0, 2),
             "token" => $this->getService($config),
             "profile" => $config['ga_profile_id'],
             'webpath' => $app['extensions']->get('Bolt/GoogleAnalytics')->getWebDirectory()->getPath(),
         ];
 
-        $html = $app['twig']->render("base.twig", $data);
+        $html = $this->renderTemplate("base.twig", $data);
 
         return new Response($html);
-
     }
 
     protected function getDefaultConfig()
@@ -112,11 +105,11 @@ class GoogleAnalyticsExtension extends SimpleExtension
 
         if ($config['universal']) {
             $data['domainname'] = $config['universal_domainname'];
-            return $app['twig']->render("universal.twig", $data);
+            return $this->renderTemplate("universal.twig", $data);
         }
 
-        $data['domainname'] = $_SERVER['HTTP_HOST'];
-        return $app['twig']->render("normal.twig", $data);
+        $data['domainname'] = $app['request_stack']->getCurrentRequest()->server->get('HTTP_HOST');;
+        return $this->renderTemplate("normal.twig", $data);
     }
 
     private function getService(array $config)
@@ -138,9 +131,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
         $service_account_email = $config['service_account_email']; //Email Address
         $key_file_location = $config['key_file_location']; //key.p12
 
-        $path = $app['resources']->getPath('config');
-
-        $path .= DIRECTORY_SEPARATOR . 'extensions' . DIRECTORY_SEPARATOR . $key_file_location;
+        $path = $app['resources']->getPath('extensions/config/' . $key_file_location);
 
         if (!file_exists($path)) {
             return "Key file not found in app/config/extenstions/!";
@@ -151,7 +142,6 @@ class GoogleAnalyticsExtension extends SimpleExtension
         // Create and configure a new client object.
         $client = new \Google_Client();
         $client->setApplicationName("HelloAnalytics");
-        $analytics = new \Google_Service_Analytics($client);
 
         // Read the generated client_secrets.p12 key.
         $key = file_get_contents($path);
