@@ -108,7 +108,8 @@ class GoogleAnalyticsExtension extends SimpleExtension
             return $this->renderTemplate("universal.twig", $data);
         }
 
-        $data['domainname'] = $app['request_stack']->getCurrentRequest()->server->get('HTTP_HOST');;
+        $data['domainname'] = $app['request_stack']->getCurrentRequest()->server->get('HTTP_HOST');
+
         return $this->renderTemplate("normal.twig", $data);
     }
 
