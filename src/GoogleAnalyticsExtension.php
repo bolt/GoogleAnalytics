@@ -76,10 +76,14 @@ class GoogleAnalyticsExtension extends SimpleExtension
 
         $config = $this->getConfig();
 
+        list($analytics, $token) = $this->getService($config);
+
+        $profile_id = $this->getFirstprofileId($analytics, $config['ga_profile_id']);
+
         $data = [
             "locale" => substr($app['locale'], 0, 2),
-            "token" => $this->getService($config),
-            "profile" => $config['ga_profile_id'],
+            "token" => $token,
+            "profile" => $profile_id,
             'webpath' => $app['extensions']->get('Bolt/GoogleAnalytics')->getWebDirectory()->getPath(),
         ];
 
@@ -114,6 +118,32 @@ class GoogleAnalyticsExtension extends SimpleExtension
         return $this->renderTemplate("normal.twig", $data);
     }
 
+    private function getFirstprofileId(&$analytics, $specified_profile_id) {
+        // Get the user's first view (profile) ID.
+
+        // Get the list of profiles for the authorized user.
+        $profiles = $analytics->management_profiles->listManagementProfiles("~all", "~all");
+
+        if (count($profiles->getItems()) > 0) {
+            $items = $profiles->getItems();
+
+            if (! empty($specified_profile_id)) {
+                foreach ($items as $item) {
+                    if ($specified_profile_id == $item->getId()) {
+                        return $specified_profile_id;
+                    }
+                }
+
+                return 'The profile you specified is incorrect. Please re-check your profile ID OR specify no ID';
+            }
+
+            return $items[0]->getId();
+
+        } else {
+            return 'No profiles found for this user. Please check p12 key and email is correct';
+        }
+    }
+
     private function getService(array $config)
     {
         $app = $this->getContainer();
@@ -144,6 +174,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
         // Create and configure a new client object.
         $client = new \Google_Client();
         $client->setApplicationName("HelloAnalytics");
+        $analytics = new \Google_Service_Analytics($client);
 
         // Read the generated client_secrets.p12 key.
         $key = file_get_contents($path);
@@ -159,6 +190,6 @@ class GoogleAnalyticsExtension extends SimpleExtension
             $client->getAuth()->refreshTokenWithAssertion($cred);
         }
 
-        return $client->getAccessToken();
+        return [$analytics, $client->getAccessToken()];
     }
 }
