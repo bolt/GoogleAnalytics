@@ -19,5 +19,5 @@ ga_profile_id:
 # Use the developers console and replace the values with your
 # service account email, and absolute location of your key file.
 # You can generate the needed details at https://console.developers.google.com
-key_file_location: 
+key_file:
 service_account_email: 

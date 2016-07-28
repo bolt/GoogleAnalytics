@@ -8,6 +8,7 @@ use Bolt\Asset\Target;
 use Bolt\Controller\Zone;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Menu\MenuEntry;
+use Eloquent\Pathogen\Exception\EmptyPathAtomException;
 use Silex\ControllerCollection;
 use Bolt\Translation\Translator as Trans;
 use Silex\Application;
@@ -53,7 +54,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
             $menu
         ];
     }
-    
+
     protected function registerAssets()
     {
         $analyticsCode = (new Snippet())
@@ -121,16 +122,14 @@ class GoogleAnalyticsExtension extends SimpleExtension
             return "service_account_email not set in config.yml.";
         }
 
-        if (empty($config['key_file_location'])) {
-            return "key_file_location not set in config.yml.";
-        }
-
         if (empty($config['ga_profile_id'])) {
             return "ga_profile_id not set in config.yml.";
+        if (empty($config['key_file'])) {
+            return "key_file not set in config.yml.";
         }
 
         $service_account_email = $config['service_account_email']; //Email Address
-        $key_file_location = $config['key_file_location']; //key.p12
+        $key_file = $config['key_file']; //key.p12
 
         try {
             $path = $app['resources']->getPath('extensionsconfig/' . $key_file);
