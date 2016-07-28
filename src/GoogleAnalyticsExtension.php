@@ -122,8 +122,6 @@ class GoogleAnalyticsExtension extends SimpleExtension
             return "service_account_email not set in config.yml.";
         }
 
-        if (empty($config['ga_profile_id'])) {
-            return "ga_profile_id not set in config.yml.";
         if (empty($config['key_file'])) {
             return "key_file not set in config.yml.";
         }
