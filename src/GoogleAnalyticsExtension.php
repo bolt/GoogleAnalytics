@@ -46,6 +46,12 @@ class GoogleAnalyticsExtension extends SimpleExtension
 
     protected function registerMenuEntries()
     {
+        $config = $this->getConfig();
+
+        if ($config['backend'] === false) {
+            return;
+        }
+
         $menu = (new MenuEntry('google', '/bolt/extensions/google-analytics'))
             ->setLabel(Trans::__('Statistics'))
             ->setIcon('fa:area-chart');
@@ -95,7 +101,8 @@ class GoogleAnalyticsExtension extends SimpleExtension
     protected function getDefaultConfig()
     {
         return [
-            'webproperty' => "property-not-set"
+            'webproperty' => "property-not-set",
+            'backend' => true
         ];
     }
 
