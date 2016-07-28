@@ -132,10 +132,14 @@ class GoogleAnalyticsExtension extends SimpleExtension
         $service_account_email = $config['service_account_email']; //Email Address
         $key_file_location = $config['key_file_location']; //key.p12
 
-        $path = $app['resources']->getPath('extensionsconfig/' . $key_file_location);
+        try {
+            $path = $app['resources']->getPath('extensionsconfig/' . $key_file);
+        } catch (EmptyPathAtomException $e) {
+            return "Please use the filename only, and include the file in app/config/extenstions/.";
+        }
 
         if (!file_exists($path)) {
-            return "Key file not found in app/config/extenstions/!";
+            return "Key file not found in app/config/extenstions/, please place the file there.";
         }
 
         require_once(__DIR__.'/../Google/autoload.php');
