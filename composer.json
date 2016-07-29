@@ -1,24 +1,35 @@
 {
     "name": "bolt/googleanalytics",
-    "description": "",
+    "description": "A Google Analytics Extension for Bolt",
     "type": "bolt-extension",
-    "keywords": [],
     "require": {
-        "bolt/bolt": ">=2.0.0,<3.0.0"
+        "bolt/bolt": "^3.0"
     },
     "license": "MIT",
     "authors": [
         {
             "name": "Bob den Otter",
             "email": "bob@twokings.nl"
+        },
+        {
+            "name": "Aaron Valandra",
+            "email": "avaland@woopta.com"
         }
     ],
+    "keywords": [
+        "statistics",
+        "analytics",
+        "google"
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
-        "files": [
-            "init.php"
-        ],
         "psr-4": {
-            "Bolt\\Extension\\Bolt\\GoogleAnalytics\\": ""
+            "Bolt\\Extension\\Bolt\\GoogleAnalytics\\": "src"
         }
+    },
+    "extra": {
+        "bolt-assets": "web",
+        "bolt-class": "Bolt\\Extension\\Bolt\\GoogleAnalytics\\GoogleAnalyticsExtension"
     }
 }
