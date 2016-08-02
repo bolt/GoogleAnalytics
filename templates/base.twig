@@ -10,6 +10,11 @@
 <div class="stats">
     {% if token is json %}
         <div id="active-users-container"></div>
+        <div class="wrapper lastweek">
+            <h2>{{__("Visitors in the last 7 days, compared to the previous week")}}</h2>
+            <div id="chart-0-container" class="chart"></div>
+            <div class="Chartjs-legend" id="legend-0-container"></div>
+        </div>
         <div class="wrapper monthbymonth">
             <h2>{{__("Unique visitors this month compared to last month")}}</h2>
             <div id="chart-1-container" class="chart"></div>
@@ -39,15 +44,19 @@
         <script>
             var GAtranslations = {
                 visitorsrightnow: "{{__("Active visitors right now")}}",
-                lastmonth: "{{__("Last month")}}",
-                thismonth: "{{__("This month")}}",
-                lastyear: "{{__("Last year")}}",
-                thisyear: "{{__("This year")}}",
-                newvisitors: "{{__("New visitors")}}",
-                returningvisitors: "{{__("Returning visitors")}}",
-                computer: "{{__("Computer")}}",
-                tablet: "{{__("Tablet")}}",
-                phone: "{{__("Phone")}}"
+                pageviewslastweek: "{{ __("Pageviews last week") }}",
+                pageviewsthisweek: "{{ __("Pageviews this week") }}",
+                lastweek: "{{ __("Visits last week") }}",
+                thisweek: "{{ __("Visits this week") }}",
+                lastmonth: "{{ __("Last month") }}",
+                thismonth: "{{ __("This month") }}",
+                lastyear: "{{ __("Last year") }}",
+                thisyear: "{{ __("This year") }}",
+                newvisitors: "{{ __("New visitors") }}",
+                returningvisitors: "{{ __("Returning visitors") }}",
+                computer: "{{ __("Computer") }}",
+                tablet: "{{ __("Tablet") }}",
+                phone: "{{ __("Phone") }}"
             }
             var locale = "{{locale}}";
             var data = {ids: "ga:{{profile}}"};
@@ -68,7 +77,6 @@
     <script src="/{{ webpath }}/es6-promise.min.js" type="text/javascript"></script>
     <script src="/{{ webpath }}/active-users.js" type="text/javascript"></script>
     <script src="/{{ webpath }}/date-range-selector.js" type="text/javascript"></script>
-    <script src="/{{ webpath }}/moment-with-locales.min.js" type="text/javascript"></script>
     <script src="/{{ webpath }}/Chart.min.js" type="text/javascript"></script>
     <script src="/{{ webpath }}/googleanalytics.js" type="text/javascript"></script>
 {% endblock %}
