@@ -35,7 +35,8 @@ class StatisticsController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->match('/google-analytics', [$app['ga.action.statistics'], "displayStatistics"]);
+        $controller->match('/google-analytics', [$app['ga.action.statistics'], "displayStatistics"])
+            ->bind("displayStatistics");
 
         //This must be ran, current user is not set at this time.
         $controller->before([$this, 'before']);

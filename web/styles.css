@@ -20,6 +20,10 @@
     height: 300px;
 }
 
+.chart-widget {
+    height: 160px;
+}
+
 .Chartjs {
     font-size: .85em
 }
@@ -48,11 +52,11 @@
     width: 1em
 }
 
-#active-users-container {
+div#active-users-container {
     text-align: center;
 }
 
-.ActiveUsers {
+div#active-users-container .ActiveUsers {
     background: #f3f2f0;
     border: 1px solid #d4d2d0;
     border-radius: 4px;

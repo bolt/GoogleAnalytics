@@ -2,6 +2,8 @@
 
 gapi.analytics.ready(function() {
 
+  $('#adblocker-notice').hide();
+
   gapi.analytics.auth.authorize({
     serverAuth: {
       access_token: access_token.access_token

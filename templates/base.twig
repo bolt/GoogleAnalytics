@@ -8,6 +8,9 @@
     <link rel="stylesheet" type="text/css" href="/{{ webpath }}/styles.css" />
 
 <div class="stats">
+    <div class="note alert alert-info" id="adblocker-notice">
+        Note: If you're not seeing any charts on this page, make sure your Adblocker isn't blocking the required javascript files, because they have 'googleanalytics' in their names.
+    </div>
     {% if token is json %}
         <div id="active-users-container"></div>
         <div class="wrapper lastweek">
