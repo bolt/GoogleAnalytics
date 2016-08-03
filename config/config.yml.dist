@@ -8,6 +8,9 @@ universal_domainname: mycoolwebsite.com
 # Turn on or off the backend statistics view
 backend: true
 
+# Turn the dashboard widget on or off
+widget: true
+
 # NOTE: the 'ga_profile_id' is _not_ the same as the 'webproperty'.
 #
 # Visit your Google Analytics page for your site, and look the displayed URL, e.g.

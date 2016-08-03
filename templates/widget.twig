@@ -8,9 +8,11 @@
         <div class="lastweek">
             <div id="chart-0-container" class="chart-widget"></div>
             <div class="Chartjs-legend" id="legend-0-container"></div>
-            <span id="active-users-container"></span>
+            <p><span id="active-users-container"></span></p>
         </div>
-        <div class="btn btn-secondary" href="{{ path('displayStatistics') }}">More statistics</div>
+        {% if statisticspage %}
+            <div class="btn btn-secondary" href="{{ path('displayStatistics') }}">More statistics</div>
+        {% endif %}
     </div>
 </div>
 <link rel="stylesheet" type="text/css" href="/{{ webpath }}/styles.css" />
@@ -20,16 +22,7 @@
         pageviewslastweek: "{{ __("Pageviews last week") }}",
         pageviewsthisweek: "{{ __("Pageviews this week") }}",
         lastweek: "{{ __("Visits last week") }}",
-        thisweek: "{{ __("Visits this week") }}",
-        lastmonth: "{{ __("Last month") }}",
-        thismonth: "{{ __("This month") }}",
-        lastyear: "{{ __("Last year") }}",
-        thisyear: "{{ __("This year") }}",
-        newvisitors: "{{ __("New visitors") }}",
-        returningvisitors: "{{ __("Returning visitors") }}",
-        computer: "{{ __("Computer") }}",
-        tablet: "{{ __("Tablet") }}",
-        phone: "{{ __("Phone") }}"
+        thisweek: "{{ __("Visits this week") }}"
     }
     var locale = "{{locale}}";
     var data = {ids: "ga:{{profile}}"};

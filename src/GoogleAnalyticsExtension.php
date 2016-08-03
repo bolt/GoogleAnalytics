@@ -74,19 +74,21 @@ class GoogleAnalyticsExtension extends SimpleExtension
             ->setLocation(Target::END_OF_HEAD)
             ->setCallback([$app['ga.snippet.analytics'], "insertAnalytics"]);
 
-        $widgetObj = new \Bolt\Asset\Widget\Widget();
-        $widgetObj
-            ->setZone('backend')
-            ->setLocation('dashboard_aside_top')
-            ->setCallback([$this, 'widget'])
-            ->setCallbackArguments([])
-            ->setDefer(false)
-        ;
+        $assets = [ $analyticsCode ];
 
-        return [
-            $analyticsCode,
+        if ($app['ga.config.config']->isWidget()) {
+            $widgetObj = new \Bolt\Asset\Widget\Widget();
             $widgetObj
-        ];
+                ->setZone('backend')
+                ->setLocation('dashboard_aside_top')
+                ->setCallback([$this, 'widget'])
+                ->setCallbackArguments([])
+                ->setDefer(false)
+            ;
+            $assets[] = $widgetObj;
+        }
+
+        return $assets;
     }
 
     public function widget()
@@ -96,14 +98,11 @@ class GoogleAnalyticsExtension extends SimpleExtension
         //Grab client to get access token that can be used in JS charts
         $client = $app['ga.handler.googleAnalytics']->connect();
 
-        //Get correct profile ID for JS charts
-        $profile_id = $app['ga.handler.googleAnalytics']->getProfileID();
-
-        $currentuser = $app['users']->getCurrentUser();
         $twigvars = [
-            "token" => $client->getAccessToken(),
-            "profile" => $profile_id,
-            'webpath' => $app['extensions']->get('Bolt/GoogleAnalytics')->getWebDirectory()->getPath()
+            'token'          => $client->getAccessToken(),
+            'profile'        => $app['ga.handler.googleAnalytics']->getProfileID(),
+            'statisticspage' => $app['ga.config.config']->isBackend(),
+            'webpath'        => $app['extensions']->get('Bolt/GoogleAnalytics')->getWebDirectory()->getPath()
         ];
 
         // Render the template, and return the results

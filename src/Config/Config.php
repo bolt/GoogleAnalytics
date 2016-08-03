@@ -36,6 +36,7 @@ class Config
         $this->setUniversal($config['universal']);
         $this->setUniversalDomainname($config['universal_domainname']);
         $this->setBackend($config['backend']);
+        $this->setWidget($config['widget']);
         $this->setGaProfileId($config['ga_profile_id']);
         $this->setKeyFile($config['key_file']);
         $this->setServiceAccountEmail($config['service_account_email']);
@@ -110,6 +111,24 @@ class Config
     public function setBackend($backend)
     {
         $this->backend = $backend;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isWidget()
+    {
+        return $this->widget;
+    }
+
+    /**
+     * @param mixed $widget
+     * @return Config
+     */
+    public function setWidget($widget)
+    {
+        $this->widget = $widget;
         return $this;
     }
 
