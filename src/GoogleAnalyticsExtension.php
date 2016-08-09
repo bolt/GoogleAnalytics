@@ -100,6 +100,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
 
         $twigvars = [
             'token'          => $client->getAccessToken(),
+            'locale'         => substr($app['locale'], 0, 2),
             'profile'        => $app['ga.handler.googleAnalytics']->getProfileID(),
             'statisticspage' => $app['ga.config.config']->isBackend(),
             'webpath'        => $app['extensions']->get('Bolt/GoogleAnalytics')->getWebDirectory()->getPath()
