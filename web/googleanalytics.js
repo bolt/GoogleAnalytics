@@ -75,15 +75,15 @@ gapi.analytics.ready(function() {
     // console.log(lastWeek);
 
     Promise.all([thisWeek, lastWeek]).then(function(results) {
-      console.log(results);
+      // console.log(results);
       var data1 = results[0].rows.map(function(row) { return +row[2]; });
       var data2 = results[1].rows.map(function(row) { return +row[2]; });
       var data1a = results[0].rows.map(function(row) { return +row[3]; });
       var data2a = results[1].rows.map(function(row) { return +row[3]; });
       var labels = results[0].rows.map(function(row) { return +row[0]; });
 
-      console.log(data1);
-      console.log(data1a);
+      // console.log(data1);
+      // console.log(data1a);
 
       labels = labels.map(function(label) {
         return moment(label, 'YYYYMMDD').format('Do');
