@@ -4,6 +4,7 @@
 namespace Bolt\Extension\Bolt\GoogleAnalytics\Controller;
 
 use Silex\Application;
+use Bolt\Controller\Zone;
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,11 +36,12 @@ class StatisticsController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller = $app['controllers_factory'];
-        $controller->match('/google-analytics', [$app['ga.action.statistics'], "displayStatistics"])
-            ->bind("displayStatistics");
+        $controller->value(Zone::KEY, Zone::BACKEND);
 
-        //This must be ran, current user is not set at this time.
-        $controller->before([$this, 'before']);
+        $controller->get('/', [$app['ga.action.statistics'], "displayStatistics"])
+            ->bind('displayStatistics')
+            ->before([$this, 'before']);
+
         return $controller;
     }
 

@@ -37,7 +37,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
     protected function registerBackendControllers()
     {
         return [
-            '/extensions' => new StatisticsController($this->getContainer()),
+            'extend/google-analytics' => new StatisticsController($this->getContainer()),
         ];
     }
 
@@ -53,7 +53,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
             return [];
         }
 
-        $menu = (new MenuEntry('google', '/bolt/extensions/google-analytics'))
+        $menu = (new MenuEntry('google', 'google-analytics'))
             ->setLabel(Trans::__('Statistics'))
             ->setIcon('fa:area-chart');
 
