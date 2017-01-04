@@ -1,0 +1,67 @@
+{% extends "_base/_page-nav.twig" %}
+
+{% block page_title __('Statistics') %}
+{% block page_nav 'Settings/Extensions' %}
+
+
+{% block page_main %}
+<div class="stats">
+    {% if token is json %}
+        <div id="active-users-container"></div>
+        <div class="wrapper monthbymonth">
+            <h2>{{__("Unique visitors this month compared to last month")}}</h2>
+            <div id="chart-1-container" class="chart"></div>
+            <div class="Chartjs-legend" id="legend-1-container"></div>
+        </div>
+        <div class="wrapper yearbyyear">
+            <h2>{{__("Unique visitors this year compared to last year")}}</h2>
+            <div id="chart-2-container" class="chart"></div>
+            <div class="Chartjs-legend" id="legend-2-container"></div>
+        </div>
+        <div class="wrapper geo">
+            <h2>{{__("City")}}</h2>
+            <div id="chart-3-container" class="chart"></div>
+            <div class="Chartjs-legend" id="legend-3-container"></div>
+        </div>
+        <div class="wrapper geo">
+            <h2>{{__("Visitor type")}}</h2>
+            <div id="chart-4-container" class="chart"></div>
+            <div class="Chartjs-legend" id="legend-4-container"></div>
+        </div>
+        <div class="wrapper geo">
+            <h2>{{__("Device type")}}</h2>
+            <div id="chart-5-container" class="chart"></div>
+            <div class="Chartjs-legend" id="legend-5-container">
+            </div>
+        </div>
+        <script>
+            var GAtranslations = {
+                visitorsrightnow: "{{__("Active visitors right now")}}",
+                lastmonth: "{{__("Last month")}}",
+                thismonth: "{{__("This month")}}",
+                lastyear: "{{__("Last year")}}",
+                thisyear: "{{__("This year")}}",
+                newvisitors: "{{__("New visitors")}}",
+                returningvisitors: "{{__("Returning visitors")}}",
+                computer: "{{__("Computer")}}",
+                tablet: "{{__("Tablet")}}",
+                phone: "{{__("Phone")}}"
+            }
+            var locale = "{{locale}}";
+            var data = {ids: "ga:{{profile}}"};
+            var access_token = {{token|raw}};
+
+            (function(w,d,s,g,js,fjs){
+            g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(cb){this.q.push(cb)}};
+            js=d.createElement(s);fjs=d.getElementsByTagName(s)[0];
+            js.src='https://apis.google.com/js/platform.js';
+            fjs.parentNode.insertBefore(js,fjs);js.onload=function(){g.load('analytics')};
+            }(window,document,'script'));
+        </script>
+    {%else%}
+        <h2>Error:</h2>
+        <p>{{token}}</p>
+    {%endif%}
+</div>
+
+{% endblock %}
