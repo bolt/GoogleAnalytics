@@ -3,6 +3,7 @@
 webproperty: UA-12345678-1
 
 universal: false
+universal_displayfeatures: false
 universal_domainname: mycoolwebsite.com
 
 # Turn on or off the backend statistics view
@@ -14,10 +15,10 @@ backend: true
 # https://www.google.com/analytics/web/?authuser=0#dashboard/default/a00000000w11111111p22222222/
 #
 # In this case the number after the 'p' is your ga_profile_id (22222222 above, yours will be different)
-ga_profile_id: 
+ga_profile_id:
 
 # Use the developers console and replace the values with your
 # service account email, and absolute location of your key file.
 # You can generate the needed details at https://console.developers.google.com
-key_file_location: 
-service_account_email: 
+key_file_location:
+service_account_email:

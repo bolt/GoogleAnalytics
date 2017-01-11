@@ -94,7 +94,7 @@ class Extension extends \Bolt\BaseExtension
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', '%webproperty%', '%domainname%');
+        ga('create', '%webproperty%', '%domainname%');%displayfeatures%
         ga('send', 'pageview');
     </script>
 EOM;
@@ -121,6 +121,7 @@ EOM;
     }
 
         $html = str_replace("%webproperty%", $this->config['webproperty'], $html);
+        $html = str_replace("%displayfeatures%", ( $this->config['universal_displayfeatures'] ? " ga('require','displayfeatures');" : '' ), $html);
         $html = str_replace("%domainname%", ( $this->config['universal'] ? $this->config['universal_domainname'] : $_SERVER['HTTP_HOST'] ), $html);
 
         return new \Twig_Markup($html, 'UTF-8');
