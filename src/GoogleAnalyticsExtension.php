@@ -69,12 +69,16 @@ class GoogleAnalyticsExtension extends SimpleExtension
     {
         $app = $this->getContainer();
 
-        $analyticsCode = (new Snippet())
-            ->setZone(Zone::FRONTEND)
-            ->setLocation(Target::END_OF_HEAD)
-            ->setCallback([$app['ga.snippet.analytics'], "insertAnalytics"]);
+        $assets = [];
 
-        $assets = [ $analyticsCode ];
+        if ($app['ga.config.config']->getWebproperty()) {
+            $analyticsCode = (new Snippet())
+                ->setZone(Zone::FRONTEND)
+                ->setLocation(Target::END_OF_HEAD)
+                ->setCallback([$app['ga.snippet.analytics'], "insertAnalytics"]);
+
+            $assets[] = $analyticsCode;
+        }
 
         if ($app['ga.config.config']->isWidget()) {
             $widgetObj = new \Bolt\Asset\Widget\Widget();
