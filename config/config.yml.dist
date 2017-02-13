@@ -1,8 +1,8 @@
 # Note: Replace this with your Google Analytics webproperty-id. It looks
 # something like UA-12345678-1. Be sure to include the "UA-"-part.
-webproperty: UA-12345678-1
+webproperty: 
 
-universal: false
+universal: true
 universal_domainname: mycoolwebsite.com
 
 # Turn on or off the backend statistics view
