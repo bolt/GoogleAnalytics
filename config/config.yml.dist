@@ -9,7 +9,7 @@ universal_domainname: mycoolwebsite.com
 backend: true
 
 # Turn the dashboard widget on or off
-widget: true
+widget: false
 
 # NOTE: the 'ga_profile_id' is _not_ the same as the 'webproperty'.
 #
