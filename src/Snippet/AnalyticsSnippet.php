@@ -48,12 +48,12 @@ class AnalyticsSnippet
         //Check to see if universal is set
         if ($this->config->isUniversal()) {
             $data['domainname'] = $this->config->getUniversalDomainname();
-            return $this->view->render("universal.twig", $data);
+            return $this->view->render("@GoogleAnalytics/universal.twig", $data);
         }
 
         //Get full url for the current website
         $data['domainname'] = $this->request->getCurrentRequest()->server->get('HTTP_HOST');
 
-        return $this->view->render("normal.twig", $data);
+        return $this->view->render("@GoogleAnalytics/normal.twig", $data);
     }
 }
