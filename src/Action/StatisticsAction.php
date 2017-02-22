@@ -61,6 +61,6 @@ class StatisticsAction
             'webpath' => $this->webPath,
         ];
 
-        return $this->view->render("base.twig", $data);
+        return $this->view->render("@GoogleAnalytics/base.twig", $data);
     }
 }

@@ -111,7 +111,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
         ];
 
         // Render the template, and return the results
-        return $this->renderTemplate('widget.twig', $twigvars);
+        return $this->renderTemplate('@GoogleAnalytics/widget.twig', $twigvars);
     }
 
     /**
@@ -119,6 +119,8 @@ class GoogleAnalyticsExtension extends SimpleExtension
      */
     protected function registerTwigPaths()
     {
-        return ['templates'];
+        return [
+            'templates' => ['namespace' => 'GoogleAnalytics']
+        ];
     }
 }
