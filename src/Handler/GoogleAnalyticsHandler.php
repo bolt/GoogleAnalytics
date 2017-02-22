@@ -114,6 +114,9 @@ class GoogleAnalyticsHandler
             //Get all of the profiles associated with user
             $items = $profiles->getItems();
 
+            //Get the specified profile ID
+            $specified_profile_id = $this->config->getGaProfileId();
+
             //Check to see if Bolt Extension configuration has profile id already
             if (! empty($specified_profile_id)) {
                 //Loop through each profile and check to see if the id is correctly set
