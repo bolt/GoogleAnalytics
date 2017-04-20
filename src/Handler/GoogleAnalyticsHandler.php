@@ -107,7 +107,12 @@ class GoogleAnalyticsHandler
 
         // Get the list of profiles for the authorized user.
         $profiles = $this->getAnalytics()->management_profiles->listManagementProfiles("~all", "~all");
-
+    
+        // If the service account has access to more than 1000 profiles
+        if (count($profiles->getItems()) > 999) {
+            return $specified_profile_id;
+        }
+        
         //Verify user has profiles
         if (count($profiles->getItems()) > 0) {
 
