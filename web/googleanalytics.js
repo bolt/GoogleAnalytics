@@ -233,8 +233,20 @@ gapi.analytics.ready(function() {
     Promise.all([thisYear, lastYear]).then(function(results) {
       var data1 = results[0].rows.map(function(row) { return +row[2]; });
       var data2 = results[1].rows.map(function(row) { return +row[2]; });
-      var labels = ['Jan','Feb','Mar','Apr','Maj','Jun',
-      'Jul','Aug','Sep','Oct','Nov','Dec'];
+      var labels = [
+          GAtranslations.months_jan,
+          GAtranslations.months_feb,
+          GAtranslations.months_mar,
+          GAtranslations.months_apr,
+          GAtranslations.months_may,
+          GAtranslations.months_jun,
+          GAtranslations.months_jul,
+          GAtranslations.months_aug,
+          GAtranslations.months_sep,
+          GAtranslations.months_oct,
+          GAtranslations.months_nov,
+          GAtranslations.months_dec
+      ];
 
     // Ensure the data arrays are at least as long as the labels array.
     // Chart.js bar charts don't (yet) accept sparse datasets.
