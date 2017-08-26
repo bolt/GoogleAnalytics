@@ -1,64 +1,38 @@
 <?php
 
-
 namespace Bolt\Extension\Bolt\GoogleAnalytics\Provider;
 
-
-use Bolt\Extension\Bolt\GoogleAnalytics\Action\StatisticsAction;
 use Bolt\Extension\Bolt\GoogleAnalytics\Config\Config;
 use Bolt\Extension\Bolt\GoogleAnalytics\Handler\GoogleAnalyticsHandler;
-use Bolt\Extension\Bolt\GoogleAnalytics\Snippet\AnalyticsSnippet;
-use Bolt\Filesystem\Handler\DirectoryInterface;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
 /**
- * Class GoogleAnalyticsProvider
- * @package Bolt\Extension\Bolt\GoogleAnalytics\Provider
+ * Google Analytics extension service provider.
+ *
+ * @author Aaron Valandra <avaland@woopta.com>
  */
 class GoogleAnalyticsProvider implements ServiceProviderInterface
 {
-
     /** @var array $config */
     protected $config;
 
-    /** @var DirectoryInterface $directory */
-    protected $directory;
-
-    public function __construct($config, DirectoryInterface $directory)
+    public function __construct(array $config)
     {
         $this->config = $config;
-        $this->directory = $directory;
     }
 
     /**
-     * Registers services on the given app.
-     *
-     * This method should only be used to configure services and parameters.
-     * It should not get services.
-     * @param Application $app
+     * {@inheritdoc}
      */
     public function register(Application $app)
     {
         /**
          * Config class
          */
-        $app['ga.config.config'] = $app->share(
+        $app['ga.config'] = $app->share(
             function () {
                 return new Config($this->config);
-            }
-        );
-
-        /**
-         * Snippets service...
-         */
-        $app['ga.snippet.analytics'] = $app->share(
-            function ($app) {
-                return new AnalyticsSnippet(
-                    $app['twig'],
-                    $app['request_stack'],
-                    $app['ga.config.config']
-                );
             }
         );
 
@@ -68,36 +42,16 @@ class GoogleAnalyticsProvider implements ServiceProviderInterface
         $app['ga.handler.googleAnalytics'] = $app->share(
             function ($app) {
                 return new GoogleAnalyticsHandler(
-                    $app['ga.config.config'],
-                    $app['resources']
+                    $app['filesystem'],
+                    $app['path_resolver'],
+                    $app['ga.config']
                 );
             }
         );
-
-        /**
-         * Statistics controller action
-         */
-        $app['ga.action.statistics'] = $app->share(
-            function ($app) {
-                return new StatisticsAction(
-                    $app['twig'],
-                    $app['ga.handler.googleAnalytics'],
-                    $app['locale'],
-                    $app['extensions']->get('Bolt/GoogleAnalytics')->getWebDirectory()->getPath()
-                );
-            }
-        );
-
-
     }
 
     /**
-     * Bootstraps the application.
-     *
-     * This method is called after all services are registered
-     * and should be used for "dynamic" configuration (whenever
-     * a service must be requested).
-     * @param Application $app
+     * {@inheritdoc}
      */
     public function boot(Application $app)
     {
