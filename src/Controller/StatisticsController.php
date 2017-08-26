@@ -1,62 +1,86 @@
 <?php
 
-
 namespace Bolt\Extension\Bolt\GoogleAnalytics\Controller;
 
-use Silex\Application;
+use Bolt\Controller\Base;
 use Bolt\Controller\Zone;
-use Silex\ControllerProviderInterface;
+use Bolt\Extension\Bolt\GoogleAnalytics\Handler\GoogleAnalyticsHandler;
+use Bolt\Filesystem\Handler\DirectoryInterface;
+use Google_Auth_Exception as AuthException;
+use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class StatisticsController
- * @package Bolt\Extension\Bolt\GoogleAnalytics\Controller
+ * Statistics controller.
+ *
+ * @author Aaron Valandra <avaland@woopta.com>
+ * @author Gawain Lynch <gawain.lynch@gmail.com>
  */
-class StatisticsController implements ControllerProviderInterface
+class StatisticsController extends Base
 {
-    /** @var Application $app */
-    protected $app;
+    /** @var DirectoryInterface */
+    private $webPath;
 
     /**
-     * StatisticsController constructor.
-     * @param Application $app
+     * Constructor.
+     *
+     * @param DirectoryInterface $webPath
      */
-    public function __construct(Application $app)
+    public function __construct(DirectoryInterface $webPath)
     {
-        $this->app = $app;
+        $this->webPath = $webPath;
     }
 
-    /**
-     * @param Application $app
-     * @return mixed
-     */
-    public function connect(Application $app)
+    protected function addRoutes(ControllerCollection $c)
     {
-        $controller = $app['controllers_factory'];
-        $controller->value(Zone::KEY, Zone::BACKEND);
+        $c->value(Zone::KEY, Zone::BACKEND);
 
-        $controller->get('/', [$app['ga.action.statistics'], "displayStatistics"])
+        $c->get('/', [$this, 'displayStatistics'])
             ->bind('displayStatistics')
             ->before([$this, 'before']);
 
-        return $controller;
+        return $c;
     }
 
     /**
-     * @param Request $request
-     * @param Application $app
-     * @return null|RedirectResponse
+     * {@inheritdoc}
      */
-    public function before(Request $request, Application $app)
+    public function before()
     {
-        if (!$app['users']->isAllowed('dashboard')) {
-            /** @var UrlGeneratorInterface $generator */
-            $generator = $app['url_generator'];
-            return new RedirectResponse($generator->generate('dashboard'), Response::HTTP_SEE_OTHER);
+        if ($this->users()->isAllowed('dashboard')) {
+            return null;
         }
-        return null;
+
+        return new RedirectResponse($this->generateUrl('dashboard'), Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @return string
+     */
+    public function displayStatistics()
+    {
+        /** @var GoogleAnalyticsHandler $handler */
+        $handler = $this->app['ga.handler.googleAnalytics'];
+
+        try {
+            // Grab client to get access token that can be used in JS charts
+            $token = $handler->connect()->getAccessToken();
+            // Get correct profile ID for JS charts
+            $profileId = $handler->getProfileID();
+        } catch (AuthException $e) {
+            $this->flashes()->error(sprintf('Unable to get Google API token: %s', $e->getMessage()));
+            $token = null;
+            $profileId = null;
+        }
+
+        $context = [
+            'locale'  => substr($this->app['locale'], 0, 2),
+            'token'   => $token,
+            'profile' => $profileId,
+            'webpath' => $this->webPath->getPath(),
+        ];
+
+        return $this->render('@GoogleAnalytics/base.twig', $context);
     }
 }
