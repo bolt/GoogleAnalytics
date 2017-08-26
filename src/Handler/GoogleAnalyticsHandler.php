@@ -1,151 +1,156 @@
 <?php
 
-
 namespace Bolt\Extension\Bolt\GoogleAnalytics\Handler;
 
-
-use Bolt\Configuration\ResourceManager;
+use Bolt\Configuration\PathResolver;
 use Bolt\Extension\Bolt\GoogleAnalytics\Config\Config;
-use Eloquent\Pathogen\Exception\EmptyPathAtomException;
-use Google_Client;
-use Google_Service_Analytics;
-use Google_Auth_AssertionCredentials;
-use Exception;
+use Bolt\Filesystem\Manager;
+use Google_Auth_AssertionCredentials as Credentials;
+use Google_Auth_OAuth2 as OAuth2;
+use Google_Client as Client;
+use Google_Service_Analytics as Analytics;
+use Google_Service_Analytics_Account as Account;
+use RuntimeException;
 
 /**
- * Class GoogleAnalyticsHandler
- * @package Bolt\Extension\Bolt\GoogleAnalytics\Handler
  * Handler to connect to Google Analytics and generate the dashboard
+ *
+ * @author Aaron Valandra <avaland@woopta.com>
+ * @author Gawain Lynch <gawain.lynch@gmail.com>
  */
 class GoogleAnalyticsHandler
 {
-    /** @var Config $config */
-    protected $config;
-
-    /** @var ResourceManager $resource */
-    protected $resource;
-
-    /** @var Google_Client $client */
+    /** @var Manager */
+    private $filesystem;
+    /** @var PathResolver */
+    private $pathResolver;
+    /** @var Config */
+    private $config;
+    /** @var Client */
     private $client;
-
-    /** @var Google_Service_Analytics $analytics */
+    /** @var Analytics */
     private $analytics;
 
-    public function __construct(Config $config, ResourceManager $resource)
+    /**
+     * Constructor.
+     *
+     * @param Manager      $filesystem
+     * @param PathResolver $pathResolver
+     * @param Config       $config
+     */
+    public function __construct(Manager $filesystem, PathResolver $pathResolver, Config $config)
     {
+        $this->filesystem = $filesystem;
+        $this->pathResolver = $pathResolver;
         $this->config = $config;
-        $this->resource = $resource;
     }
 
     /**
-     * @return Google_Client
-     * @throws Exception
      * This function connects to Google Analytics and returns the client
+     *
+     * @throws RuntimeException
+     *
+     * @return Client
      */
     public function connect()
     {
-        $service_account_email = $this->config->getServiceAccountEmail(); //Email Address
-        $key_file = $this->config->getKeyFile(); //key.p12
+        // Email Address
+        $serviceAccountEmail = $this->config->getServiceAccountEmail();
+        // key.p12
+        $keyFileName = $this->config->getKeyFile();
 
-        //Verify service account email is in config.yml
-        if (empty($service_account_email)) {
-            throw new Exception("service_account_email not set in config.yml.");
+        // Verify service account email is in config.yml
+        if (!$serviceAccountEmail) {
+            throw new RuntimeException(sprintf(
+                'The "service_account_email" parameter not set in %s/googleanalytics.bolt.yml',
+                $this->pathResolver->resolve('%extensions_config%')
+            ));
         }
-
-        //Verify key file is in config.yml
-        if (empty($key_file)) {
-            throw new Exception("key_file not set in config.yml.");
+        // Verify key file is in config.yml
+        if (!$keyFileName) {
+            throw new RuntimeException(sprintf(
+                'The "key_file" parameter not set in %s/googleanalytics.bolt.yml',
+                $this->pathResolver->resolve('%extensions_config%')
+            ));
         }
-
-        //$path may throw error if user specifies FULL path, so catch error and give user a better error message
-        try {
-            $path = $this->resource->getPath('extensionsconfig/' . $key_file);
-        } catch (EmptyPathAtomException $e) {
-            throw new Exception("Please use the filename only, and include the file in app/config/extenstions/.");
+        $keyFile = $this->filesystem->getFilesystem('extensions_config')->getFile($keyFileName);
+        if (!$keyFile->exists()) {
+            throw new RuntimeException('Key file not found in app/config/extensions/, please place the file there.');
         }
-
-        //Verify key file exists
-        if (!file_exists($path)) {
-            throw new Exception("Key file not found in app/config/extenstions/, please place the file there.");
-        }
-
-        require_once(__DIR__.'/../../Google/autoload.php');
-
-        // Create and configure a new client object.
-        $client = new Google_Client();
-        $client->setApplicationName("Statistics");
-        $analytics = new Google_Service_Analytics($client);
-
         // Read the generated client_secrets.p12 key.
-        $key = file_get_contents($path);
-        $cred = new Google_Auth_AssertionCredentials(
-            $service_account_email,
-            array(Google_Service_Analytics::ANALYTICS_READONLY),
-            $key
-        );
+        $key = $keyFile->read();
 
-        $client->setAssertionCredentials($cred);
+        // Invoke Google's autoloader … 'cause WTF Google!
+        require_once __DIR__ . '/../../Google/autoload.php';
 
-        if ($client->getAuth()->isAccessTokenExpired()) {
-            $client->getAuth()->refreshTokenWithAssertion($cred);
+        // Create client credentials
+        $credentials = new Credentials($serviceAccountEmail, [Analytics::ANALYTICS_READONLY], $key);
+        // Create and configure a new client object.
+        $this->client = new Client();
+        $this->client->setApplicationName('Statistics');
+        $this->client->setAssertionCredentials($credentials);
+
+        // Create analytics service
+        $this->analytics = new Analytics($this->client);
+
+        /** @var OAuth2 $auth */
+        $auth = $this->client->getAuth();
+        if ($auth->isAccessTokenExpired()) {
+            $auth->refreshTokenWithAssertion($credentials);
         }
 
-        $this->setClient($client);
-
-        $this->setAnalytics($analytics);
-
-        return $client;
+        return $this->client;
     }
 
     /**
+     * This checks to see if the specified profile ID is correct, and if it
+     * isn't then throw an exception. If nothing set, then grab the first ID.
+     *
+     * @throws RuntimeException
+     *
      * @return mixed
-     * @throws Exception
-     * This checks to see if the specified profile id is correct,
-     * and if it isn't then throw exception. If nothing set, then it grabs first id.
      */
-    public function getProfileID() {
-
+    public function getProfileID()
+    {
         // Get the list of profiles for the authorized user.
-        $profiles = $this->getAnalytics()->management_profiles->listManagementProfiles("~all", "~all");
-    
+        $profiles = $this->analytics->management_profiles->listManagementProfiles('~all', '~all');
+
+        // Get the specified profile ID
+        // Check to see if Bolt Extension configuration has profile id already
+        $specifiedProfileId = $this->config->getGaProfileId();
+        if (!$specifiedProfileId) {
+            throw new RuntimeException('The profile you specified is incorrect. Please re-check your profile ID, or specify no ID');
+        }
+
         // If the service account has access to more than 1000 profiles
         if (count($profiles->getItems()) > 999) {
-            return $specified_profile_id;
+            return $specifiedProfileId;
         }
-        
-        //Verify user has profiles
-        if (count($profiles->getItems()) > 0) {
 
-            //Get all of the profiles associated with user
-            $items = $profiles->getItems();
-
-            //Get the specified profile ID
-            $specified_profile_id = $this->config->getGaProfileId();
-
-            //Check to see if Bolt Extension configuration has profile id already
-            if (! empty($specified_profile_id)) {
-                //Loop through each profile and check to see if the id is correctly set
-                foreach ($items as $item) {
-                    if ($specified_profile_id == $item->getId()) {
-                        return $specified_profile_id;
-                    }
-                }
-
-                //Throw error is profile ID is incorrect
-                throw new Exception('The profile you specified is incorrect. Please re-check your profile ID OR specify no ID');
-            }
-
-            //Return first profile ID
-            return $items[0]->getId();
-
-        } else {
+        // Verify user has profiles
+        if (!count($profiles->getItems())) {
             //If no profiles set at all then throw error
-            throw new Exception('No profiles found for this user. Please check p12 key and email is correct');
+            throw new RuntimeException('No profiles found for this user. Please check p12 key and email is correct');
         }
+
+        // Get all of the profiles associated with user
+        $items = $profiles->getItems();
+        // Loop through each profile and check to see if the ID is correctly set
+        foreach ($items as $item) {
+            /** @var Account $item */
+            if ($specifiedProfileId === $item->getId()) {
+                return $specifiedProfileId;
+            }
+        }
+
+        // Return first profile ID
+        $item = $items[0];
+
+        return $item->getId();
     }
 
     /**
-     * @return Google_Client
+     * @return Client
      */
     public function getClient()
     {
@@ -153,31 +158,10 @@ class GoogleAnalyticsHandler
     }
 
     /**
-     * @param Google_Client $client
-     * @return GoogleAnalyticsHandler
-     */
-    public function setClient($client)
-    {
-        $this->client = $client;
-        return $this;
-    }
-
-    /**
-     * @return Google_Service_Analytics
+     * @return Analytics
      */
     public function getAnalytics()
     {
         return $this->analytics;
     }
-
-    /**
-     * @param Google_Service_Analytics $analytics
-     * @return GoogleAnalyticsHandler
-     */
-    public function setAnalytics($analytics)
-    {
-        $this->analytics = $analytics;
-        return $this;
-    }
-
 }
