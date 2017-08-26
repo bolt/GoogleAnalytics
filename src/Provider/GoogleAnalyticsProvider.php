@@ -40,22 +40,6 @@ class GoogleAnalyticsProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-
-        /**
-         * This registers translations for the translator. This can be gotten rid of in version
-         * in 3.2(?) since there should be an automatic translator...
-         */
-        $translationDirectory = $this->directory->getDir('translations');
-        if ($translationDirectory->exists()) {
-            foreach ($translationDirectory->getContents(true) as $fileInfo) {
-                if ($fileInfo->isFile()) {
-                    list($domain, $extension) = explode('.', $fileInfo->getFilename());
-                    $path = $app['resources']->getPath('extensions/' . $fileInfo->getPath());
-                    $app['translator']->addResource($extension, $path, $domain);
-                }
-            }
-        }
-
         /**
          * Config class
          */
