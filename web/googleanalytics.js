@@ -233,8 +233,20 @@ gapi.analytics.ready(function() {
     Promise.all([thisYear, lastYear]).then(function(results) {
       var data1 = results[0].rows.map(function(row) { return +row[2]; });
       var data2 = results[1].rows.map(function(row) { return +row[2]; });
-      var labels = ['Jan','Feb','Mar','Apr','Maj','Jun',
-      'Jul','Aug','Sep','Oct','Nov','Dec'];
+      var labels = [
+          GAtranslations.months_jan,
+          GAtranslations.months_feb,
+          GAtranslations.months_mar,
+          GAtranslations.months_apr,
+          GAtranslations.months_may,
+          GAtranslations.months_jun,
+          GAtranslations.months_jul,
+          GAtranslations.months_aug,
+          GAtranslations.months_sep,
+          GAtranslations.months_oct,
+          GAtranslations.months_nov,
+          GAtranslations.months_dec
+      ];
 
     // Ensure the data arrays are at least as long as the labels array.
     // Chart.js bar charts don't (yet) accept sparse datasets.
@@ -291,14 +303,21 @@ gapi.analytics.ready(function() {
 
       var data = [];
       var colors = ['rgba(65, 168, 95, 0.5)', 'rgba(0, 168, 133, 0.5)', 'rgba(61, 142, 185, 0.5)', 'rgba(41, 105, 176, 0.5)', 'rgba(85, 57, 130, 0.5)', 'rgba(40, 50, 78, 0.5)', 'rgba(250, 197, 28, 0.5)', 'rgba(243, 121, 52, 0.5)', 'rgba(209, 72, 65, 0.5)', 'rgba(184, 49, 47, 0.5)', 'rgba(247, 218, 100, 0.5)', 'rgb(235, 107, 86, 0.5)'];
-
-      response.rows.forEach(function(row, i) {
-        data.push({
-          label: row[0],
-          value: +row[1],
-          color: colors[i]
-        });
-      });
+      if(response.rows !== undefined) {
+          response.rows.forEach(function (row, i) {
+              data.push({
+                  label: row[0],
+                  value: +row[1],
+                  color: colors[i]
+              });
+          });
+      }else{
+          data.push({
+              label: GAtranslations.nodata,
+              value: 1,
+              color: 'rgba(220,220,220,0.5)'
+          });
+      }
 
       new Chart(makeCanvas('chart-3-container')).Doughnut(data);
       generateLegend('legend-3-container', data);
@@ -316,14 +335,21 @@ gapi.analytics.ready(function() {
 
       var data = [];
       var colors = ['rgba(65, 168, 95, 0.5)', 'rgba(0, 168, 133, 0.5)', 'rgba(61, 142, 185, 0.5)', 'rgba(41, 105, 176, 0.5)', 'rgba(85, 57, 130, 0.5)', 'rgba(40, 50, 78, 0.5)', 'rgba(250, 197, 28, 0.5)', 'rgba(243, 121, 52, 0.5)', 'rgba(209, 72, 65, 0.5)', 'rgba(184, 49, 47, 0.5)', 'rgba(247, 218, 100, 0.5)', 'rgb(235, 107, 86, 0.5)'];
-
-      response.rows.forEach(function(row, i) {
-        data.push({
-          label: row[0],
-          value: +row[1],
-          color: colors[i]
-        });
-      });
+      if(response.rows !== undefined) {
+          response.rows.forEach(function (row, i) {
+              data.push({
+                  label: row[0],
+                  value: +row[1],
+                  color: colors[i]
+              });
+          });
+      }else{
+          data.push({
+              label: GAtranslations.nodata,
+              value: 1,
+              color: 'rgba(220,220,220,0.5)'
+          });
+      }
 
       new Chart(makeCanvas('chart-4-container')).Doughnut(data);
       generateLegend('legend-4-container', data);
@@ -340,14 +366,21 @@ gapi.analytics.ready(function() {
 
       var data = [];
       var colors = ['rgba(65, 168, 95, 0.5)', 'rgba(0, 168, 133, 0.5)', 'rgba(61, 142, 185, 0.5)', 'rgba(41, 105, 176, 0.5)', 'rgba(85, 57, 130, 0.5)', 'rgba(40, 50, 78, 0.5)', 'rgba(250, 197, 28, 0.5)', 'rgba(243, 121, 52, 0.5)', 'rgba(209, 72, 65, 0.5)', 'rgba(184, 49, 47, 0.5)', 'rgba(247, 218, 100, 0.5)', 'rgb(235, 107, 86, 0.5)'];
-
-      response.rows.forEach(function(row, i) {
-        data.push({
-          label: row[0],
-          value: +row[1],
-          color: colors[i]
-        });
-      });
+      if(response.rows !== undefined) {
+          response.rows.forEach(function (row, i) {
+              data.push({
+                  label: row[0],
+                  value: +row[1],
+                  color: colors[i]
+              });
+          });
+      }else{
+          data.push({
+              label: GAtranslations.nodata,
+              value: 1,
+              color: 'rgba(220,220,220,0.5)'
+          });
+      }
 
       new Chart(makeCanvas('chart-5-container')).Doughnut(data);
       generateLegend('legend-5-container', data);
