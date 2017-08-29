@@ -20,7 +20,7 @@ widget: false
 ga_profile_id:
 
 # Use the developers console and replace the values with your service account email,
-# and the name of your key file (should be places in app/config/extensions/).
+# and the filename of your `.p12` key file (should be placed in app/config/extensions/).
 #
 # You can generate the needed details at https://console.developers.google.com
 key_file:
