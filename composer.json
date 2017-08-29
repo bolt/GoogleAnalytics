@@ -1,9 +1,9 @@
 {
     "name": "bolt/googleanalytics",
-    "description": "A Google Analytics Extension for Bolt",
+    "description": "A Google Analytics extension for Bolt",
     "type": "bolt-extension",
     "require": {
-        "bolt/bolt": "^3.0"
+        "bolt/bolt": "^3.3"
     },
     "license": "MIT",
     "authors": [
@@ -14,6 +14,10 @@
         {
             "name": "Aaron Valandra",
             "email": "avaland@woopta.com"
+        },
+        {
+            "name": "Gawain Lynch",
+            "email": "gawain.lynch@gmail.com"
         }
     ],
     "keywords": [
