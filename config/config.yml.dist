@@ -1,6 +1,6 @@
 # Note: Replace this with your Google Analytics webproperty-id. It looks
 # something like UA-12345678-1. Be sure to include the "UA-"-part.
-webproperty: 
+webproperty:
 
 universal: true
 universal_domainname: mycoolwebsite.com
@@ -17,10 +17,11 @@ widget: false
 # https://www.google.com/analytics/web/?authuser=0#dashboard/default/a00000000w11111111p22222222/
 #
 # In this case the number after the 'p' is your ga_profile_id (22222222 above, yours will be different)
-ga_profile_id: 
+ga_profile_id:
 
-# Use the developers console and replace the values with your
-# service account email, and absolute location of your key file.
+# Use the developers console and replace the values with your service account email,
+# and the name of your key file (should be places in app/config/extensions/).
+#
 # You can generate the needed details at https://console.developers.google.com
 key_file:
-service_account_email: 
+service_account_email:

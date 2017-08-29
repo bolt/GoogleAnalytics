@@ -1,188 +1,181 @@
 <?php
 
-
 namespace Bolt\Extension\Bolt\GoogleAnalytics\Config;
 
+use Symfony\Component\HttpFoundation\ParameterBag;
+
 /**
- * Class Config
- * @package Bolt\Extension\Bolt\GoogleAnalytics\Config
- * Config class that holds the configuration of the extension
+ * Config class that holds the configuration of the extension.
  */
-class Config
+class Config extends ParameterBag
 {
-
-    private $webproperty;
-
-    private $universal;
-
-    private $universalDomainname;
-
-    private $backend;
-
-    private $gaProfileId;
-
-    private $keyFile;
-
-    private $serviceAccountEmail;
-
     /**
-     * Config constructor.
-     * @param $config
-     * Setup the configuration from the config array
+     * Constructor.
+     *
+     * @param array $config
      */
     public function __construct($config)
     {
-        $this->setWebproperty($config['webproperty']);
-        $this->setUniversal($config['universal']);
-        $this->setUniversalDomainname($config['universal_domainname']);
-        $this->setBackend($config['backend']);
-        $this->setWidget($config['widget']);
-        $this->setGaProfileId($config['ga_profile_id']);
-        $this->setKeyFile($config['key_file']);
-        $this->setServiceAccountEmail($config['service_account_email']);
+        parent::__construct($config);
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getWebproperty()
+    public function getWebProperty()
     {
-        return $this->webproperty;
+        return $this->get('webproperty');
     }
 
     /**
-     * @param mixed $webproperty
+     * @param string $webProperty
+     *
      * @return Config
      */
-    public function setWebproperty($webproperty)
+    public function setWebProperty($webProperty)
     {
-        $this->webproperty = $webproperty;
+        $this->set('webproperty', $webProperty);
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isUniversal()
     {
-        return $this->universal;
+        return $this->getBoolean('universal');
     }
 
     /**
-     * @param mixed $universal
+     * @param bool $universal
+     *
      * @return Config
      */
     public function setUniversal($universal)
     {
-        $this->universal = $universal;
+        $this->set('universal', (bool) $universal);
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getUniversalDomainname()
+    public function getUniversalDomainName()
     {
-        return $this->universalDomainname;
+        return $this->get('universal_domainname');
     }
 
     /**
-     * @param mixed $universalDomainname
+     * @param string $universalDomainName
+     *
      * @return Config
      */
-    public function setUniversalDomainname($universalDomainname)
+    public function setUniversalDomainName($universalDomainName)
     {
-        $this->universalDomainname = $universalDomainname;
+        $this->set('universal_domainname', $universalDomainName);
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isBackend()
     {
-        return $this->backend;
+        return $this->getBoolean('backend');
     }
 
     /**
-     * @param mixed $backend
+     * @param bool $backend
+     *
      * @return Config
      */
     public function setBackend($backend)
     {
-        $this->backend = $backend;
+        $this->set('backend', (bool) $backend);
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isWidget()
     {
-        return $this->widget;
+        return $this->getBoolean('widget');
     }
 
     /**
-     * @param mixed $widget
+     * @param bool $widget
+     *
      * @return Config
      */
     public function setWidget($widget)
     {
-        $this->widget = $widget;
+        $this->set('widget', (bool) $widget);
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getGaProfileId()
     {
-        return $this->gaProfileId;
+        return $this->get('ga_profile_id');
     }
 
     /**
      * @param mixed $gaProfileId
+     *
      * @return Config
      */
     public function setGaProfileId($gaProfileId)
     {
-        $this->gaProfileId = $gaProfileId;
+        $this->set('ga_profile_id', $gaProfileId);
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getKeyFile()
     {
-        return $this->keyFile;
+        return $this->get('key_file');
     }
 
     /**
-     * @param mixed $keyFile
+     * @param string $keyFile
+     *
      * @return Config
      */
     public function setKeyFile($keyFile)
     {
-        $this->keyFile = $keyFile;
+        $this->set('key_file', $keyFile);
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getServiceAccountEmail()
     {
-        return $this->serviceAccountEmail;
+        return $this->get('service_account_email');
     }
 
     /**
-     * @param mixed $serviceAccountEmail
+     * @param string $serviceAccountEmail
+     *
      * @return Config
      */
     public function setServiceAccountEmail($serviceAccountEmail)
     {
-        $this->serviceAccountEmail = $serviceAccountEmail;
+        $this->set('service_account_email', $serviceAccountEmail);
+
         return $this;
     }
 }

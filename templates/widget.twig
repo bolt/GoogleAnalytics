@@ -15,7 +15,7 @@
         {% endif %}
     </div>
 </div>
-<link rel="stylesheet" type="text/css" href="/{{ webpath }}/styles.css" />
+<link rel="stylesheet" type="text/css" href="{{ asset(webpath ~ '/styles.css', 'extensions') }}" />
 <script>
     var GAtranslations = {
         visitorsrightnow: "{{__("Active visitors right now")}}",
@@ -23,7 +23,7 @@
         pageviewsthisweek: "{{ __("Pageviews this week") }}",
         lastweek: "{{ __("Visits last week") }}",
         thisweek: "{{ __("Visits this week") }}"
-    }
+    };
     var locale = "{{locale}}";
     var data = {ids: "ga:{{profile}}"};
     var access_token = {{token|raw}};
@@ -35,8 +35,8 @@
         fjs.parentNode.insertBefore(js,fjs);js.onload=function(){g.load('analytics')};
     }(window,document,'script'));
 </script>
-<script src="/{{ webpath }}/es6-promise.min.js" type="text/javascript"></script>
-<script src="/{{ webpath }}/active-users.js" type="text/javascript"></script>
-<script src="/{{ webpath }}/date-range-selector.js" type="text/javascript"></script>
-<script src="/{{ webpath }}/Chart.min.js" type="text/javascript"></script>
-<script src="/{{ webpath }}/googleanalytics.js" type="text/javascript"></script>
+<script src="{{ asset(webpath ~ '/es6-promise.min.js', 'extensions') }}" type="text/javascript"></script>
+<script src="{{ asset(webpath ~ '/active-users.js', 'extensions') }}" type="text/javascript"></script>
+<script src="{{ asset(webpath ~ '/date-range-selector.js', 'extensions') }}" type="text/javascript"></script>
+<script src="{{ asset(webpath ~ '/Chart.min.js', 'extensions') }}" type="text/javascript"></script>
+<script src="{{ asset(webpath ~ '/googleanalytics.js', 'extensions') }}" type="text/javascript"></script>

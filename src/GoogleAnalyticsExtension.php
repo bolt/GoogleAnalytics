@@ -1,55 +1,35 @@
 <?php
-// Google Analytics extension for Bolt
 
 namespace Bolt\Extension\Bolt\GoogleAnalytics;
 
 use Bolt\Asset\Snippet\Snippet;
 use Bolt\Asset\Target;
+use Bolt\Asset\Widget\Widget;
 use Bolt\Controller\Zone;
 use Bolt\Extension\Bolt\GoogleAnalytics\Controller\StatisticsController;
 use Bolt\Extension\Bolt\GoogleAnalytics\Provider\GoogleAnalyticsProvider;
 use Bolt\Extension\SimpleExtension;
 use Bolt\Menu\MenuEntry;
 use Bolt\Translation\Translator as Trans;
-use Symfony\Component\Translation\Loader as TranslationLoader;
+use Bolt\Version;
+use Google_Auth_Exception as AuthException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class GoogleAnalyticsExtension
- * @package Bolt\Extension\Bolt\GoogleAnalytics
+ * Google Analytics extension loader.
+ *
+ * @author Aaron Valandra <avaland@woopta.com>
+ * @author Gawain Lynch <gawain.lynch@gmail.com>
  */
 class GoogleAnalyticsExtension extends SimpleExtension
 {
-
     /**
-     * @return array
-     */
-    public function getServiceProviders()
-    {
-        return [
-            $this,
-            new GoogleAnalyticsProvider($this->getConfig(), $this->getBaseDirectory())
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function registerBackendControllers()
-    {
-        return [
-            'extend/google-analytics' => new StatisticsController($this->getContainer()),
-        ];
-    }
-
-    /**
-     * @return array
-     * If backend is set to false, don't load the menu link.
+     * {@inheritdoc}
      */
     protected function registerMenuEntries()
     {
-        $app = $this->getContainer();
-
-        if (! $app['ga.config.config']->isBackend()) {
+        $config = $this->getConfig();
+        if (!$config['backend']) {
             return [];
         }
 
@@ -57,70 +37,147 @@ class GoogleAnalyticsExtension extends SimpleExtension
             ->setLabel(Trans::__('Statistics'))
             ->setIcon('fa:area-chart');
 
-        return [
-            $menu
-        ];
+        return [$menu];
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     protected function registerAssets()
     {
-        $app = $this->getContainer();
-
+        $config = $this->getConfig();
         $assets = [];
 
-        if ($app['ga.config.config']->getWebproperty()) {
-            $analyticsCode = (new Snippet())
+        if ($config['webproperty']) {
+            $analyticsCode = Snippet::create()
+                ->setCallback([$this, 'analyticsCallback'])
                 ->setZone(Zone::FRONTEND)
                 ->setLocation(Target::END_OF_HEAD)
-                ->setCallback([$app['ga.snippet.analytics'], "insertAnalytics"]);
-
+            ;
             $assets[] = $analyticsCode;
         }
 
-        if ($app['ga.config.config']->isWidget()) {
-            $widgetObj = new \Bolt\Asset\Widget\Widget();
-            $widgetObj
-                ->setZone('backend')
+        if ((bool) $config['widget']) {
+            $widget = Widget::create()
+                ->setCallback([$this, 'widgetCallback'])
+                ->setZone(Zone::BACKEND)
                 ->setLocation('dashboard_aside_top')
-                ->setCallback([$this, 'widget'])
-                ->setCallbackArguments([])
-                ->setDefer(false)
             ;
-            $assets[] = $widgetObj;
+            $assets[] = $widget;
         }
 
         return $assets;
     }
 
-    public function widget()
+    /**
+     * Widget render callback.
+     *
+     * @return string
+     */
+    public function widgetCallback()
     {
         $app = $this->getContainer();
+        /** @var Handler\GoogleAnalyticsHandler $handler */
+        $handler = $app['ga.handler.googleAnalytics'];
 
-        //Grab client to get access token that can be used in JS charts
-        $client = $app['ga.handler.googleAnalytics']->connect();
-
-        $twigvars = [
+        try {
+            // Grab client to get access token that can be used in JS charts
+            $client = $handler->connect();
+        } catch (AuthException $e) {
+            return $e->getMessage();
+        }
+        $context = [
             'token'          => $client->getAccessToken(),
             'locale'         => substr($app['locale'], 0, 2),
-            'profile'        => $app['ga.handler.googleAnalytics']->getProfileID(),
-            'statisticspage' => $app['ga.config.config']->isBackend(),
-            'webpath'        => $app['extensions']->get('Bolt/GoogleAnalytics')->getWebDirectory()->getPath()
+            'profile'        => $handler->getProfileID(),
+            'statisticspage' => $app['ga.config']->isBackend(),
+            'webpath'        => $this->getWebDirectory()->getPath(),
         ];
 
         // Render the template, and return the results
-        return $this->renderTemplate('@GoogleAnalytics/widget.twig', $twigvars);
+        return $this->renderTemplate('@GoogleAnalytics/widget.twig', $context);
     }
 
     /**
-     * @return array
+     * Analytics render callback.
+     *
+     * @return string
+     */
+    public function analyticsCallback()
+    {
+        $config = $this->getConfig();
+        // Set the webproperty to be used whether or not universal is used or not
+        $context['webproperty'] = $config['webproperty'];
+
+        // Check to see if universal is set
+        if ((bool) $config['universal']) {
+            $context['domainname'] = $config['universal_domainname'];
+
+            return $this->renderTemplate('@GoogleAnalytics/universal.twig', $context);
+        }
+
+        $app = $this->getContainer();
+        /** @var Request $request */
+        $request = $app['request_stack']->getCurrentRequest();
+        if ($request === null) {
+            return null;
+        }
+        // Get full url for the current website
+        $context['domainname'] = $request->getHttpHost();
+
+        return $this->renderTemplate('@GoogleAnalytics/normal.twig', $context);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function registerTwigPaths()
     {
         return [
-            'templates' => ['namespace' => 'GoogleAnalytics']
+            'templates' => ['namespace' => 'GoogleAnalytics'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function registerBackendControllers()
+    {
+        $baseUrl = Version::compare('3.2.999', '<')
+            ? '/extensions/google-analytics'
+            : '/extend/google-analytics'
+        ;
+
+        return [
+            $baseUrl => new StatisticsController($this->getWebDirectory()),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getServiceProviders()
+    {
+        return [
+            $this,
+            new GoogleAnalyticsProvider($this->getConfig()),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultConfig()
+    {
+        return [
+            'webproperty'           => null,
+            'universal'             => true,
+            'universal_domainname'  => null,
+            'backend'               => true,
+            'widget'                => false,
+            'ga_profile_id'         => null,
+            'key_file'              => null,
+            'service_account_email' => null,
         ];
     }
 }
