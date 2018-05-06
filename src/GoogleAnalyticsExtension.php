@@ -35,6 +35,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
 
         $menu = (new MenuEntry('google', 'google-analytics'))
             ->setLabel(Trans::__('Statistics'))
+            ->setPermission('googleanalytics')
             ->setIcon('fa:area-chart');
 
         return [$menu];
