@@ -108,6 +108,7 @@ class GoogleAnalyticsExtension extends SimpleExtension
         $config = $this->getConfig();
         // Set the webproperty to be used whether or not universal is used or not
         $context['webproperty'] = $config['webproperty'];
+        $context['anonymize_ip'] = $config['anonymize_ip'];
 
         // Check to see if universal is set
         if ((bool) $config['universal']) {

@@ -8,6 +8,9 @@ universal_domainname: mycoolwebsite.com
 # Turn on or off the backend statistics view
 backend: true
 
+# Enable ip anonymization
+anonymize_ip: false
+
 # Turn the dashboard widget on or off
 widget: false
 
