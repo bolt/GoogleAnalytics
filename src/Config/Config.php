@@ -178,4 +178,24 @@ class Config extends ParameterBag
 
         return $this;
     }
+
+    /**
+     * @param bool $anonymizeIp
+     *
+     * @return Config
+     */
+    public function setAnonymizeIp($anonymizeIp)
+    {
+        $this->set('anonymize_ip', (bool) $anonymizeIp);
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnonymizeIp()
+    {
+        return $this->getBoolean('anonymize_ip');
+    }
 }
