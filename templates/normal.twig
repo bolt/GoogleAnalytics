@@ -3,7 +3,7 @@
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', '{{ webproperty }}']);
     _gaq.push(['_setDomainName', '{{ domainname }}']);
-    {% if anonymize_ip is true %}
+    {% if anonymize_ip %}
     _gaq.push (['_gat._anonymizeIp']);
     {% endif %}
     _gaq.push(['_trackPageview']);
